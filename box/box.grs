@@ -1,0 +1,6 @@
+entity/box1,box2 $$实体变量
+box1=solblk/origin,0,0,0,size,100,100,100 $$箱体1
+box1=solblk/origin,1000,0,0,size,100,100,100
+&color(box1)=186
+messg/'creat two boxes'
+halt
