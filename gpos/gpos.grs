@@ -1,0 +1,13 @@
+$$ 建箱体
+$$ 前三个数字为方体x、y、z坐标位置，
+$$ 后三个数字是方体x、y、z方向的长度。
+ 
+$$ 运用点构造器定位生成箱体
+entity/box    $$ 实体变量定义
+l10:
+      gpos/'pick a point',x,y,z,resp
+      jump/l10:,end:,,,resp
+ 
+      box=solblk/origin,x,y,z,size,100,100,100
+end: $$ 结束程序
+halt $$ 停止
