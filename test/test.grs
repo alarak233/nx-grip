@@ -1,1 +1,9 @@
-entity/
+entity/c1,pa,pb
+number/a(3),b(3)
+
+c1=circle/0,0,2,start,0,end,180
+a=ctanf(c1,0)
+b=ctanf(c1,1.5)
+pa=point/a
+pb=point/b
+halt
