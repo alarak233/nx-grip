@@ -1,0 +1,21 @@
+$$用于回转体母线点集的生成
+    entity/pts(100000),crv(100),crvsuf(100),xzpl
+    number/ptnum,index,ptcnt,usresp,n
+init:
+    ptnum=1000
+    xzpl=plane/xzplan,0
+    do/step1:,index,1,100000
+        pts(index)=&nulent
+step1:
+    ident/'message',$
+        crvsuf,cnt,n,usresp
+    jump/end:,end:,,usresp
+    crv(1..n)=intsec/crvsuf(1..n),with,xzpl
+step2:
+    param/'point number',$
+        'point number(100000max) = ',ptnum,usresp
+    jump/step1:,end:,usresp
+step3:
+    cpset/eparam,crv(1..n),ptnum,pts
+end:
+    halt
