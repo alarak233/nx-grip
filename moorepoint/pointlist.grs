@@ -1,21 +1,26 @@
 $$用于回转体母线点集的生成
-    entity/pts(100000),crv(100),crvsuf(100),xzpl
-    number/ptnum,index,ptcnt,usresp,n
+    entity/pts(100000),crv,crvsuf,xzpl,yzpl,crv1
+    entity/suf1              $$变量名不能超过六位
+    number/ptnum,index,ptcnt,usresp
 init:
     ptnum=1000
     xzpl=plane/xzplan,0
+    yzpl=plane/yzplan,0
     do/step1:,index,1,100000
         pts(index)=&nulent
 step1:
     ident/'message',$
-        crvsuf,cnt,n,usresp
+        crvsuf,usresp
     jump/end:,end:,,usresp
-    crv(1..n)=intsec/crvsuf(1..n),with,xzpl
+    suf1=solcut/crvsuf,with,yzpl
+    crv=intsec/xzpl,with,suf1 $$求曲面交线的结果是一个组，需要解组
+    crv1=&gent(crv,1)            $$解组
+    ungrp/crv
 step2:
     param/'point number',$
         'point number(100000max) = ',ptnum,usresp
     jump/step1:,end:,usresp
 step3:
-    cpset/eparam,crv(1..n),ptnum,pts
+    cpset/eparam,crv1,ptnum,pts
 end:
     halt
