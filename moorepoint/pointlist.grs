@@ -2,18 +2,18 @@ $$用于回转体母线点集的生成
     entity/pts(100000),crv,crvsuf,xzpl,yzpl,crv1
     entity/suf1,bsuf              $$变量名不能超过六位
     number/ptnum,index,ptcnt,usresp
-init:
+init:$$初始化
     ptnum=1000
     xzpl=plane/xzplan,0
     yzpl=plane/yzplan,0
     do/step1:,index,1,100000
         pts(index)=&nulent
 step1:
-    mask/71
+    mask/71                 $$过滤器选择面
     ident/'message',$
         crvsuf,usresp
     jump/end:,end:,,usresp
-    bsuf=bsurf/surfc,crvsuf
+    bsuf=bsurf/surfc,crvsuf    $$抽取选择的表面，若只选取体的表面则无法分割面
     suf1=solcut/bsuf,with,yzpl
     crv=intsec/xzpl,with,suf1 $$求曲面交线的结果是一个组，需要解组
     crv1=&gent(crv,1)            $$解组
