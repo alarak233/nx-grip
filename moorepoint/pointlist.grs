@@ -2,10 +2,13 @@ $$用于回转体母线点集的生成
     entity/pts(100000),crv,crvsuf,xzpl,yzpl,crv1
     entity/suf1,bsuf              $$变量名不能超过六位
     number/ptnum,index,ptcnt,usresp
+    string/fmt(50)
 init:$$初始化
     ptnum=1000
     xzpl=plane/xzplan,0
     yzpl=plane/yzplan,0
+    fmt='C:\Users\72707\Desktop\point.csv'
+    fdel/fmt
     do/step1:,index,1,100000
         pts(index)=&nulent
 step1:
@@ -24,11 +27,12 @@ step2:
     jump/step1:,end:,usresp
 step3:
     cpset/eparam,crv1,ptnum,pts
-    create/txt,1,'C:\Users\72707\Desktop\point.csv'
+    create/txt,1,fmt
     i=1
+    DELIM/','
 step4:
     ifthen/pts(i)<>&nulent
-        write/1,&point(pts(i))
+        write/1,using,'#@@@.@@@@@@,',&point(pts(i))
         i=i+1
         jump/step4:
     endif
