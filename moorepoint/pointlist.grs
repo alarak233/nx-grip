@@ -30,13 +30,13 @@ step11:
     jump/end:,end:,,usresp
     bsuf=bsurf/surfc,crvsuf   $$抽取选择的表面，若只选取体的表面则无法分割面
     pt1=point/0,0,0
-    spt=point/pt1,intof,zline,bsuf
+    spt=point/pt1,intof,zline,bsuf$$轴与面的交线
     sptz=&point(spt)
     matx=matrix/transl,0,0,-sptz(3)
-    suf1=transf/matx,bsuf
+    suf1=transf/matx,bsuf$$位移矩阵及变形
     delete/bsuf
     matx=matrix/scale,1,1,upordn
-    bsuf=transf/matx,suf1
+    bsuf=transf/matx,suf1$$上下镜像矩阵及变形
     delete/suf1
     suf1=solcut/bsuf,with,yzpl
     crv=intsec/xzpl,with,suf1 $$求曲面交线的结果是一个组，需要解组
@@ -52,7 +52,8 @@ step3:
     i=1
 step4:
     ifthen/pts(i)<>&nulent
-        write/1,using,'#@@@.@@@@@@,',&point(pts(i))$$格式化（csv文件以逗号分隔）
+        sptz=&point(pts(i))
+        write/1,using,'#@@@.@@@@@@,',sptz(1),sptz(3)$$格式化（csv文件以逗号分隔）
         i=i+1
         jump/step4:
     endif
