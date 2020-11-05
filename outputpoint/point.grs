@@ -14,7 +14,7 @@ l2:
     create/txt,1,catlog
     do/l3:,i,1,n
         pt=&point(pts(i))
-        write/1,pt(1),',',pt(3)        
+        write/1,using,'#@@@.@@@@@@',pt(1),',',pt(3)
 l3:
     file/txt,1
 end:

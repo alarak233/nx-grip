@@ -53,7 +53,7 @@ step3:
 step4:
     ifthen/pts(i)<>&nulent
         sptz=&point(pts(i))
-        write/1,using,'#@@@.@@@@@@,',sptz(1),sptz(3)$$格式化（csv文件以逗号分隔）
+        write/1,using,'#@@@.@@@@@@',sptz(1),',',sptz(3)$$格式化（csv文件以逗号分隔）
         i=i+1
         jump/step4:
     endif
