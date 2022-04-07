@@ -1,0 +1,21 @@
+entity/pts(100000)
+number/pynum,n,i,rsp,pt(3)
+string/catlog(50)
+init:
+    catlog='D:\ug_file\point.csv'
+    do/l1:,i,1,100000
+        pts(i)=&nulent
+l1:
+    fdel/catlog,iferr,l2:
+l2:
+    mask/2
+    ident/'choose',pts,cnt,n,rsp
+    jump/end:,end:,,rsp
+    create/txt,1,catlog
+    do/l3:,i,1,n
+        pt=&point(pts(i))
+        write/1,using,'#@@@@.@@@@@@@@',pt(1),pt(2),pt(3)
+l3:
+    file/txt,1
+end:
+    halt

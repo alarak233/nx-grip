@@ -1,0 +1,88 @@
+﻿$$用于回转体母线点集的生成
+    entity/pts(100000),crv(10),crvsuf(10),xzpl,yzpl
+    entity/suf1(10),bsuf(10),zline,spt,pt1,crv1(10)      $$变量名不能超过六位
+    number/ptnum,index,ptcnt,usresp,len
+    number/sptz(3),matx(12),upordn,sufcnt
+    number/curlen(10),curnum,sumnum
+    string/fmt(50)$$文件路径
+init:$$初始化
+    ptnum=1000
+    xzpl=plane/xzplan,0
+    yzpl=plane/yzplan,0
+    zline=line/0,0,0,0,0,1
+    fmt='C:\Users\72707\Desktop\point.csv'
+    fdel/fmt,iferr,step0:$$文件初始化
+step0:
+    do/step1:,index,1,100000
+        pts(index)=&nulent
+step1:
+    choose/'选择上表面还是下表面','上表面','下表面',deflt,1,usresp
+    jump/step1:,end:,,,up:,down:,usresp
+up:
+    upordn=1
+    jump/step11:
+down:
+    upordn=-1
+    jump/step11:
+step11:
+    mask/71                   $$过滤器选择面
+    ident/'选择需要加工的面，先选择中间的面',$
+        crvsuf,cnt,sufcnt,usresp
+    jump/end:,end:,,usresp
+    i=1
+step12:
+    ifthen/i<=sufcnt
+        bsuf(i)=bsurf/surfc,crvsuf(i)   $$抽取选择的表面，若只选取体的表面则无法分割面
+        i=i+1
+        jump/step12:
+    endif
+step13:
+    pt1=point/0,0,0
+    spt=point/pt1,intof,zline,bsuf(1)
+    sptz=&point(spt)
+    matx=matrix/transl,0,0,-sptz(3)
+    suf1(1..sufcnt)=transf/matx,bsuf(1..sufcnt)$$位移矩阵及变形
+    delete/bsuf(1..sufcnt)
+    matx=matrix/scale,1,1,upordn
+    bsuf(1..sufcnt)=transf/matx,suf1(1..sufcnt)$$上下镜像矩阵及变形
+    delete/suf1(1..sufcnt)
+    suf1(1..sufcnt)=solcut/bsuf(1..sufcnt),with,yzpl
+    i=1
+    len=0
+step14:
+    ifthen/i<=sufcnt
+        crv(i)=intsec/xzpl,with,suf1(i) $$求曲面交线的结果是一个组，需要解组
+        crv1(i)=&gent(crv(i),1)         $$解组
+        ungrp/crv(i)
+        anlsis/arclen,crv1(i),mmeter,curlen(i)
+        len=len+curlen(i)
+        i=i+1
+        jump/step14:
+    endif
+step2:
+    param/'点集数量',$
+        '点集数量，最大十万个',ptnum,usresp
+    jump/step1:,end:,usresp
+    i=1
+    sumnum=1
+step3:
+    ifthen/i<=sufcnt
+        curnum=curlen(i)/len*ptnum
+        cpset/eparam,crv1(i),curnum+1,pts(sumnum..sumnum+curnum)
+        sumnum=sumnum+curnum-1
+        i=i+1
+        jump/step3:
+    endif
+    create/txt,1,fmt
+    i=1
+step4:
+    ifthen/pts(i)<>&nulent
+        sptz=&point(pts(i))
+        write/1,using,'#@@@.@@@@@@',sptz(1),',',sptz(3)$$格式化（csv文件以逗号分隔）
+        i=i+1
+        jump/step4:
+    endif
+    file/txt,1
+    delete/crvsuf,xzpl,yzpl,crv1,suf1,bsuf,zline,spt,pt1 
+end:
+    halt
